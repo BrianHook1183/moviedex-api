@@ -5,9 +5,32 @@ const app = express();
 
 app.use(morgan('dev'));
 
-app.use((req, res) => {
-  res.send('Hello, world!!');
-});
+
+
+function handleGetMovie(req, res) {
+  res.send('this endpoint is working');
+};
+
+app.get('/movie', handleGetMovie)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const PORT = 8000;
 
