@@ -21,30 +21,34 @@ function handleGetMovie(req, res) {
   const qGenre = req.query.genre.toLowerCase();
   const qCountry = req.query.country.toLowerCase();
   const qRating = Number(req.query.rating);
-  const queries = `Genre is: ${qGenre}, Country is: ${qCountry}, and rating is: ${qRating}`;
 
-  res.json(queries);
+  let response = MOVIES;
+
+  if (qGenre) {
+    response = response.filter(movie =>
+      movie.genre.toLowerCase().includes(qGenre)
+    )
+  }
+  if (qCountry) {
+    response = response.filter(movie =>
+      movie.country.toLowerCase().includes(qCountry)
+    )
+  }
+  if (qRating) {
+    response = response.filter(movie =>
+      movie.avg_vote >= qRating
+    )
+  }
+
+
+  if (!response.length) {
+    response = '0 movies match this search, try adjusting your parameters';
+  }
+
+  res.json(response);
 };
 
 app.get('/movie', handleGetMovie)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 const PORT = 8000;
