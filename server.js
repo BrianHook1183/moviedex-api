@@ -18,7 +18,12 @@ app.use(function validateBearerToken(req, res, next) {
 })
 
 function handleGetMovie(req, res) {
-  res.json(MOVIES);
+  const qGenre = req.query.genre.toLowerCase();
+  const qCountry = req.query.country.toLowerCase();
+  const qRating = parseFloat(req.query.rating);
+  const queries = `Genre is: ${qGenre}, Country is: ${qCountry}, and rating is: ${qRating}`;
+
+  res.json(queries);
 };
 
 app.get('/movie', handleGetMovie)
