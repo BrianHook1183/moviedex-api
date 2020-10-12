@@ -1,11 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const MOVIES = require('./movies-data-small.json');
 
 const app = express();
 
 app.use(morgan('dev'));
+app.use(cors());
 
 app.use(function validateBearerToken(req, res, next) {
   const authToken = req.get('Authorization');
