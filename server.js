@@ -6,7 +6,17 @@ const app = express();
 
 app.use(morgan('dev'));
 
+app.use(function validateBearerToken(req, res, next) {
+  const bearerToken = req.get('Authorization').split(' ')[1];
+  const apiToken = process.env.API_TOKEN;
 
+  console.log('validateBearerToken');
+
+  if (bearerToken !== apiToken) {
+    return res.status(401).json({ error: 'Unauthorized request' });
+  }
+  next();
+})
 
 function handleGetMovie(req, res) {
   res.send('this endpoint is working');
