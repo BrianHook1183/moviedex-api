@@ -7,7 +7,8 @@ const MOVIES = require('./movies-data-small.json');
 
 const app = express();
 
-app.use(morgan('dev'));
+const morganSetting = process.env.NODE_ENV === 'production' ? 'tiny' : 'common';
+app.use(morgan(morganSetting));
 app.use(helmet());
 app.use(cors());
 
@@ -27,32 +28,41 @@ function handleGetMovie(req, res) {
   if (req.query.genre) {
     response = response.filter(movie =>
       movie.genre.toLowerCase().includes(req.query.genre.toLowerCase())
-    )
-  }
+    );
+  };
   if (req.query.country) {
     response = response.filter(movie =>
       movie.country.toLowerCase().includes(req.query.country.toLowerCase())
-    )
-  }
+    );
+  };
   if (req.query.rating) {
     response = response.filter(movie =>
       movie.avg_vote >= Number(req.query.rating)
-    )
-  }
+    );
+  };
 
 
   if (!response.length) {
     response = '0 movies match this search, try adjusting your parameters';
-  }
+  };
 
   res.json(response);
 };
 
-app.get('/movie', handleGetMovie)
+app.get('/movie', handleGetMovie);
 
+// 4 parameters in middleware, express knows to treat this as error handler
+app.use((error, req, res, next) => {
+  let response;
+  if (process.env.NODE_ENV === 'production') {
+    response = { error: { message: 'server error' } };
+  } else {
+    response = { error };
+  }
+  res.status(500).json(response);
+});
 
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
 });
