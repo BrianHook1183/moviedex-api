@@ -24,20 +24,25 @@ app.use(function validateBearerToken(req, res, next) {
 
 function handleGetMovie(req, res) {
   let response = MOVIES;
+  const {
+    genre = false,
+    country = false,
+    avg_vote = false
+  } = req.query;
 
-  if (req.query.genre) {
+  if (genre) {
     response = response.filter(movie =>
-      movie.genre.toLowerCase().includes(req.query.genre.toLowerCase())
+      movie.genre.toLowerCase().includes(genre.toLowerCase())
     );
   };
-  if (req.query.country) {
+  if (country) {
     response = response.filter(movie =>
-      movie.country.toLowerCase().includes(req.query.country.toLowerCase())
+      movie.country.toLowerCase().includes(country.toLowerCase())
     );
   };
-  if (req.query.rating) {
+  if (avg_vote) {
     response = response.filter(movie =>
-      movie.avg_vote >= Number(req.query.rating)
+      movie.avg_vote >= Number(avg_vote)
     );
   };
 
